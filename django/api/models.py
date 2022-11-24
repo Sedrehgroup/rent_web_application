@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 """class User(models.Model):
     FirstName = models.CharField(max_length=255)
     LastName = models.CharField(max_length=255)
@@ -12,8 +12,8 @@ from django.contrib.auth.models import User
 
 
 class Rent(models.Model):
-    landlord = models.ForeignKey(User, related_name= 'rent_landlord', on_delete=models.PROTECT)
-    tenant = models.ForeignKey(User, related_name= 'rent_tenant', on_delete=models.PROTECT)
+    landlord = models.ForeignKey(User, related_name='rent_landlord', on_delete=models.PROTECT)
+    tenant = models.ForeignKey(User, related_name='rent_tenant', on_delete=models.PROTECT)
     mortgage_amount = models.IntegerField()
     rent_amount = models.IntegerField()
     meterage = models.IntegerField()

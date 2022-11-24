@@ -23,18 +23,25 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 # Application definition
-
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api',
-    'rest_framework',
-    'corsheaders',
 ]
+LOCAL_APPS = [
+    "users.apps.UsersConfig",
+    "api.apps.ApiConfig",
+]
+THIRD_PARTY_APPS = [
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders'
+]
+
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -72,8 +79,8 @@ WSGI_APPLICATION = 'RentDashboardMVP.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-MYSQL = {
-    'ENGINE': 'django.db.backends.mysql',
+POSTGRESQL = {
+    'ENGINE': 'django.db.backends.postgresql',
     'NAME': os.environ.get('DB_NAME'),
     'USER': os.environ.get('DB_USER'),
     'PASSWORD': os.environ.get('DB_PASS'),
@@ -83,7 +90,7 @@ MYSQL = {
     }
 
 DATABASES = {
-    'default': MYSQL
+    'default': POSTGRESQL
 }
 
 # Password validation
@@ -132,5 +139,10 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
+
+AUTH_USER_MODEL = "users.User"
