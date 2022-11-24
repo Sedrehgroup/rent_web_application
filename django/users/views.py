@@ -34,7 +34,7 @@ class OtpRegister(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         random_code = random.randint(1000, 9999)
-        # send_otp_code(phone_number=phone_number, code=random_code)
+        send_otp_code(phone_number=phone_number, code=random_code)
 
         updated_values = {'code': f'{random_code}'}
         OtpCode.objects.update_or_create(phone_number=phone_number, defaults=updated_values)
