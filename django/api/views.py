@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, ListCreateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .models import Property
 from .serializer import PropertySerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -20,5 +20,19 @@ class CreateListMyProperties(ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=[self.request.user])
+
+
+class RetrieveUpdateDestroyProperties(RetrieveUpdateDestroyAPIView):
+    serializer_class = PropertySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Property.objects.filter(owner=self.request.user)
+        return queryset
+
+
+
+
+
 
 

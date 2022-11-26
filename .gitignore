@@ -1,9 +1,8 @@
 .idea
 *.pyc
 venv
-/django/users/migrations/*
-/django/api/migrations/*
-!/django/users/migrations/__init__.py
-!/django/api/migrations/__init__.py
+**/migrations/
+!**/migrations/__init__.py
+
 
 
