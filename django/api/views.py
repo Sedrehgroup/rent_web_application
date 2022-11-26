@@ -1,23 +1,24 @@
-from django.shortcuts import render
-from rest_framework import generics
-from .models import Rent
-from .serializer import RentSerializer
+from rest_framework.generics import ListAPIView, ListCreateAPIView
+from .models import Property
+from .serializer import PropertySerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
-class RentList(generics.ListCreateAPIView):
-    serializer_class = RentSerializer
+class PropertyList(ListAPIView):
+    serializer_class = PropertySerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Property.objects.all()
+
+
+class CreateListMyProperties(ListCreateAPIView):
+    serializer_class = PropertySerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Rent.objects.all()
-        landlord = self.request.query_params.get('landlord')
-        tenant = self.request.query_params.get('tenant')
-        if landlord is not None:
-            queryset = queryset.filter(landlord=landlord)
-        if tenant is not None:
-            queryset = queryset.filter(tenant=tenant)
+        queryset = Property.objects.filter(owner=self.request.user)
         return queryset
 
+    def perform_create(self, serializer):
+        serializer.save(owner=[self.request.user])
 
-class RentDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = RentSerializer
-    queryset = Rent.objects.all()
+

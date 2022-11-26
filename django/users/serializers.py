@@ -7,6 +7,17 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from utils import phone_number_validator
 
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        is_valid, msg = phone_number_validator(attrs["phone_number"])
+        if not is_valid:
+            raise AuthenticationFailed({"phone_number": msg})
+
+        data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
+        return data
+
+
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
@@ -36,15 +47,16 @@ class CreateUserSerializer(serializers.ModelSerializer):
         data = {'refresh': str(token), "access": str(token.access_token)}
         return data
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
-    def validate(self, attrs):
-        is_valid, msg = phone_number_validator(attrs["phone_number"])
-        if not is_valid:
-            raise AuthenticationFailed({"phone_number": msg})
+class RetrieveUpdateDestroyUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("phone_number", "national_code", "first_name", "last_name")
 
-        data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
-        return data
+
+
+
+
 
 
 class RetrieveUpdateDestroyAdditionalUserInformationSerializer(serializers.ModelSerializer):

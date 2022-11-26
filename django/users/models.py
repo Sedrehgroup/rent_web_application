@@ -3,14 +3,14 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    username = None
-    email = None
     phone_number = models.CharField(max_length=13, unique=True)
     password = models.CharField(max_length=128)  # default = rent
     national_code = models.CharField(max_length=10, unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
+    username = None
+    email = None
     
     USERNAME_FIELD = 'phone_number'
 

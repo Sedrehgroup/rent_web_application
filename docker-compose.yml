@@ -3,22 +3,6 @@ version: "3.9"
 
 services:
 
-#  mysql:
-#    image: mysql:latest
-#    container_name: db_mysql
-#    restart: always
-#    environment:
-#      MYSQL_DATABASE: db_rent_dashboard_mvp
-##      MYSQL_USER: rent
-#      MYSQL_ROOT_PASSWORD: PouriaCloner313
-##      MYSQL_ALLOW_EMPTY_PASSWORD: PouriaCloner313
-##      MYSQL_RANDOM_ROOT_PASSWORD: PouriaCloner313
-#    expose:
-#      - 3306
-#    volumes:
-#      - my-db:/var/lib/mysql
-#    networks:
-#      - main
   postgres:
     container_name: postgres
     image: postgres:15.1
@@ -54,7 +38,7 @@ services:
       context: ./django
     command: sh -c "python manage.py makemigrations --noinput
       && python manage.py migrate
-      && gunicorn --reload RentDashboardMVP.wsgi --bind 0.0.0.0:8000"
+      && gunicorn --reload config.wsgi --bind 0.0.0.0:8000"
     container_name: api_django
     depends_on:
       - postgres

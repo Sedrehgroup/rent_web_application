@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Rent
+from .models import Property
 
 
-class RentSerializer(serializers.ModelSerializer):
+class PropertySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Rent
-        fields = ('__all__')
+        model = Property
+        exclude = ('owner',)

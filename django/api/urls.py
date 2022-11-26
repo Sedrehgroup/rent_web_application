@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import RentList, RentDetail
+from .views import PropertyList, CreateListMyProperties
 
 urlpatterns = [
-    path('rents/', RentList().as_view()),
-    path('rents/<int:pk>', RentDetail().as_view()),
+    path('properties_list/', PropertyList().as_view()),
+    path('my_properties/', CreateListMyProperties().as_view()),
 ]

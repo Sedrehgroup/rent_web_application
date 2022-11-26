@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,7 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 # CORS Policy
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost',
     'http://localhost:8080',
@@ -32,8 +33,8 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 LOCAL_APPS = [
-    "users.apps.UsersConfig",
-    "api.apps.ApiConfig",
+    "users",
+    "api",
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -55,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-ROOT_URLCONF = 'RentDashboardMVP.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -74,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'RentDashboardMVP.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -146,3 +147,8 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = "users.User"
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}

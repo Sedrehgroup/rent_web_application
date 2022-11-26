@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from utils import send_otp_code, phone_number_validator
 from .models import OtpCode, User, UserAdditionalInformation
 from .serializers import CustomTokenObtainPairSerializer, UserSerializer, CreateUserSerializer, \
-    RetrieveUpdateDestroyAdditionalUserInformationSerializer, CreateAdditionalUserInformationSerializer
+    RetrieveUpdateDestroyAdditionalUserInformationSerializer, CreateAdditionalUserInformationSerializer, RetrieveUpdateDestroyUserSerializer
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -21,6 +21,18 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class CreateUser(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = CreateUserSerializer
+
+
+class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RetrieveUpdateDestroyUserSerializer
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return self.request.user
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class OtpRegister(APIView):

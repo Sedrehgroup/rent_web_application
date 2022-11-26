@@ -1,3 +1,5 @@
 .idea
 *.pyc
 venv
+/django/users/migrations/
+/django/api/migrations/
