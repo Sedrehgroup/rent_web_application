@@ -45,8 +45,8 @@ class Property(models.Model):
 
 
 class Request(models.Model):
-    property = models.OneToOneField(Property, on_delete=models.PROTECT)
-    tenant = models.OneToOneField(User, on_delete=models.PROTECT)
+    request_property = models.ForeignKey(Property, on_delete=models.PROTECT, related_name='request_property')
+    tenant = models.ForeignKey(User, on_delete=models.PROTECT, related_name='request_tenant')
     status = models.SmallIntegerField()
     tenant_description = models.CharField(max_length=350, null=True)
     landlord_description = models.CharField(max_length=350, null=True)
