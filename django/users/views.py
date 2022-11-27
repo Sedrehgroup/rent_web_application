@@ -23,6 +23,14 @@ class CreateUser(CreateAPIView):
     serializer_class = CreateUserSerializer
 
 
+class CreateAdditionalUserInformation(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CreateAdditionalUserInformationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
 class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = RetrieveUpdateDestroyUserSerializer
@@ -100,11 +108,4 @@ class RetrieveUpdateDestroyAdditionalUserInformation(RetrieveUpdateDestroyAPIVie
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
 
-
-class CreateAdditionalUserInformation(CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CreateAdditionalUserInformationSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 

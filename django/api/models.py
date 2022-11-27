@@ -53,8 +53,9 @@ class Request(models.Model):
 
 
 class Contract(models.Model):
-    landlord = models.OneToOneField(User, related_name='landlord', on_delete=models.PROTECT)
-    tenant = models.OneToOneField(User, related_name='tenant', on_delete=models.PROTECT)
+    contract_landlord = models.OneToOneField(User, related_name='contract_landlord', on_delete=models.PROTECT)
+    contract_tenant = models.OneToOneField(User, related_name='contract_tenant', on_delete=models.PROTECT)
+    contract_property = models.OneToOneField(Property, related_name='contract_property', on_delete=models.PROTECT)
     contract_registration_date = models.DateField()
     contract_date = models.DateField()
     serial_type = models.SmallIntegerField(null=True)
@@ -64,3 +65,4 @@ class Contract(models.Model):
     end_date = models.DateField()
     share = models.SmallIntegerField()
     dong = models.SmallIntegerField()
+
