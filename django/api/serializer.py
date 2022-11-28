@@ -29,4 +29,3 @@ class ContractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = "__all__"
-        read_only_fields = ('contract_landlord', 'contract_tenant', 'contract_property')
