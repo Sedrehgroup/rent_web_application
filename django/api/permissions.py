@@ -1,44 +1,38 @@
 from rest_framework.permissions import BasePermission
-from users.models import User
+from .models import Property
+
+
+class IsNotOwner(BasePermission):
+    message = 'you can not request to your own property'
+
+    def has_permission(self, request, view):
+
+        request_property_id = request.data.get('request_property')
+        is_owner = Property.objects.filter(owner=request.user, id=request_property_id).exists()
+
+        return not is_owner
 
 
 class IsLandlord(BasePermission):
+    message = 'you are not landlord or tenant'
+
     def has_permission(self, request, view):
-        if request.method == 'POST':
-            contract_landlord = request.data.get('contract_landlord')
-            landlord = User.objects.get(pk=contract_landlord)
-            return landlord.id == request.user.id
-        return True
+        contract_landlord = request.data.get('contract_landlord')
+        return contract_landlord == request.user.id
 
     def has_object_permission(self, request, view, obj):
         return obj.contract_landlord_id == request.user.id
 
 
 class IsTenant(BasePermission):
+    message = 'you are not landlord or tenant'
+
     def has_permission(self, request, view):
-        if request.method == 'POST':
-            contract_tenant = request.data.get('contract_tenant')
-            tenant = User.objects.get(pk=contract_tenant)
-            return tenant.id == request.user.id
-        return True
+        contract_tenant = request.data.get('contract_tenant')
+        return contract_tenant == request.user.id
 
     def has_object_permission(self, request, view, obj):
         return obj.contract_tenant_id == request.user.id
 
-
-class TenantIsNotLandlord(BasePermission):
-    message = 'owner and tenant are equal'
-
-    def has_permission(self, request, view):
-        if request.method == 'POST':
-
-            contract_landlord = request.data.get('contract_landlord')
-            contract_tenant = request.data.get('contract_tenant')
-
-            landlord = User.objects.get(pk=contract_landlord)
-            tenant = User.objects.get(pk=contract_tenant)
-
-            return tenant.id != landlord.id
-        return True
-
+#
 

@@ -1,8 +1,8 @@
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from .models import Property, Request, Contract
-from .permissions import IsTenant, IsLandlord, TenantIsNotLandlord
+from .permissions import IsTenant, IsLandlord, IsNotOwner
 from .serializer import PropertySerializer, ContractSerializer, RequestSerializer, CreateRequestSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 
 
@@ -35,7 +35,15 @@ class RetrieveUpdateDestroyProperties(RetrieveUpdateDestroyAPIView):
 
 class CreateListRequests(ListCreateAPIView):
     serializer_class = RequestSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            # Create
+            self.permission_classes = [IsAuthenticated, IsNotOwner]
+        else:
+            # List
+            self.permission_classes = [IsAuthenticated]
+        return super(CreateListRequests, self).get_permissions()
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -70,7 +78,15 @@ class RetrieveUpdateDestroyRequests(RetrieveUpdateDestroyAPIView):
 
 class ListCreateContract(ListCreateAPIView):
     serializer_class = ContractSerializer
-    permission_classes = [IsAuthenticated,IsLandlord | IsTenant, TenantIsNotLandlord]
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            # Create
+            self.permission_classes = [IsAuthenticated, IsLandlord | IsTenant]
+        else:
+            # List
+            self.permission_classes = [IsAuthenticated]
+        return super(ListCreateContract, self).get_permissions()
 
     def get_queryset(self):
         queryset = Contract.objects.filter(Q(contract_tenant=self.request.user) | Q(contract_landlord=self.request.user))
