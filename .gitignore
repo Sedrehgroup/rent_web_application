@@ -1,8 +1,8 @@
 .idea
 *.pyc
 venv
-**/migrations/
-!**/migrations/__init__.py
+**/migrations/0*
+
 
 
 
