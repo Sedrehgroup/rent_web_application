@@ -1,5 +1,4 @@
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView, \
-    RetrieveDestroyAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.exceptions import PermissionDenied
@@ -92,7 +91,7 @@ class RetrieveUser(RetrieveAPIView):
     def get_object(self):
         if self.kwargs["pk"] == self.request.user.id or self.request.user.is_admin:
             return self.request.user
-        raise PermissionDenied("You don't have access to see the details of other users")
+        raise PermissionDenied("You don't have access to see the details of other account")
 
 
 class RetrieveUpdateDestroyAdditionalUserInformation(RetrieveUpdateDestroyAPIView):

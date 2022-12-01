@@ -42,27 +42,3 @@ class Property(models.Model):
     unit_floor = models.SmallIntegerField(null=True)
     floors_number = models.SmallIntegerField(null=True)
     units_per_floor = models.SmallIntegerField(null=True)
-
-
-class Request(models.Model):
-    request_property = models.ForeignKey(Property, on_delete=models.PROTECT, related_name='request_property')
-    tenant = models.ForeignKey(User, on_delete=models.PROTECT, related_name='request_tenant')
-    status = models.SmallIntegerField()
-    tenant_description = models.CharField(max_length=350, null=True)
-    landlord_description = models.CharField(max_length=350, null=True)
-
-
-class Contract(models.Model):
-    contract_landlord = models.ForeignKey(User, related_name='contract_landlord', on_delete=models.PROTECT)
-    contract_tenant = models.ForeignKey(User, related_name='contract_tenant', on_delete=models.PROTECT)
-    contract_property = models.OneToOneField(Property, related_name='contract_property', on_delete=models.PROTECT)
-    contract_registration_date = models.DateField()
-    contract_date = models.DateField()
-    serial_type = models.SmallIntegerField(null=True)
-    serial_number = models.IntegerField(null=True)
-    document_status = models.SmallIntegerField(null=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    share = models.SmallIntegerField()
-    dong = models.SmallIntegerField()
-

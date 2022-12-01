@@ -33,8 +33,10 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 LOCAL_APPS = [
-    "users",
-    "api",
+    "account",
+    "contract",
+    "property",
+    "request"
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -146,7 +148,7 @@ REST_FRAMEWORK = {
     )
 }
 
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "account.User"
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),

@@ -3,7 +3,9 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path('api/', include('api.urls')),
-    path('users/', include('users.urls')),
+    path('api/property/', include('property.urls')),
+    path('api/request/', include('request.urls')),
+    path('api/contract/', include('contract.urls')),
+    path('account/', include('account.urls')),
 
 ]
