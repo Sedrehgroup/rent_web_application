@@ -51,7 +51,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class RetrieveUpdateDestroyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("phone_number", "national_code", "first_name", "last_name")
+        fields = ("id", "phone_number", "national_code", "first_name", "last_name")
 
 
 

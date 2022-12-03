@@ -1,5 +1,6 @@
 from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
+from account.serializers import RetrieveUpdateDestroyUserSerializer
 from .models import Contract
 from account.models import User
 
@@ -13,12 +14,14 @@ class ContractSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_contract_landlord(self, obj):
-        contract_landlord = User.objects.filter(id=obj.contract_landlord_id).only("first_name", "last_name").first()
-        return {"contract_landlord_id": contract_landlord.id, "first_name": contract_landlord.first_name, "last_name": contract_landlord.last_name}
+        contract_landlord = User.objects.get(id=obj.contract_landlord_id)
+        return RetrieveUpdateDestroyUserSerializer(instance=contract_landlord).data
+
 
     def get_contract_tenant(self, obj):
-        contract_tenant = User.objects.filter(id=obj.contract_tenant_id).only("first_name", "last_name").first()
-        return {"contract_landlord_id": contract_tenant.id, "first_name": contract_tenant.first_name, "last_name": contract_tenant.last_name}
+        contract_tenant = User.objects.get(id=obj.contract_tenant_id)
+        return RetrieveUpdateDestroyUserSerializer(instance=contract_tenant).data
+
 
     def validate(self, attrs):
         if self.context['request']._request.method == 'POST':
