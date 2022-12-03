@@ -17,3 +17,5 @@ class Contract(models.Model):
     end_date = models.DateField()
     share = models.SmallIntegerField()
     dong = models.SmallIntegerField()
+    tenant_signature = models.BooleanField(default=False)
+    landlord_signature = models.BooleanField(default=False)
