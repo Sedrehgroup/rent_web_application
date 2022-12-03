@@ -6,7 +6,7 @@ User = settings.AUTH_USER_MODEL
 class Property(models.Model):
 
     # Primary Fields
-    owner = models.ManyToManyField(User, related_name='owner')
+    owner = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     mortgage_amount = models.IntegerField()
     rent_amount = models.IntegerField()

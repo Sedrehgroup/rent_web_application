@@ -54,8 +54,8 @@ services:
       - ALLOW_ORIGIN=http://localhost:3000
     networks:
       - main
-#    volumes:
-#      - ./django:/api_django
+    volumes:
+      - ./django:/api_django
     restart: always
 
   nginx:
