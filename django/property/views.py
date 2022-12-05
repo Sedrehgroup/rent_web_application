@@ -16,6 +16,7 @@ class PropertyList(ListAPIView):
 class CreateListMyProperties(ListCreateAPIView):
     serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
+    filterset_fields = ['county', 'city']
     pagination_class = PropertyPagination
 
     def get_queryset(self):

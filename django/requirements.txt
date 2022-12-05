@@ -9,7 +9,6 @@ djangorestframework-simplejwt==5.2.2
 gunicorn==20.1.0
 idna==3.4
 ippanel==2.0.7
-kavenegar==1.1.2
 psycopg2-binary==2.9.5
 PyJWT==2.6.0
 pytz==2022.6
