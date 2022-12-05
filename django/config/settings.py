@@ -36,7 +36,8 @@ LOCAL_APPS = [
     "account",
     "contract",
     "property",
-    "request"
+    "request",
+    "chat"
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',

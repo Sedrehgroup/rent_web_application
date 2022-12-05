@@ -1,6 +1,6 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .models import Contract
-from permissions import IsTenant, IsLandlord, ObjectIsLandlord, ObjectIsTenant
+from contract.permissions import IsTenant, IsLandlord, ObjectIsLandlord, ObjectIsTenant
 from .serializer import ContractSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q

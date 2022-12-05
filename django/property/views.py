@@ -2,20 +2,23 @@ from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpda
 from .models import Property
 from .serializer import PropertySerializer
 from rest_framework.permissions import IsAuthenticated
+from property.pagination import PropertyPagination
 
 
 class PropertyList(ListAPIView):
     serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
-    queryset = Property.objects.all()
+    pagination_class = PropertyPagination
+    queryset = Property.objects.all().order_by("-created_date")
 
 
 class CreateListMyProperties(ListCreateAPIView):
     serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = PropertyPagination
 
     def get_queryset(self):
-        queryset = Property.objects.filter(owner=self.request.user)
+        queryset = Property.objects.filter(owner=self.request.user).order_by("-created_date")
         return queryset
 
     def perform_create(self, serializer):

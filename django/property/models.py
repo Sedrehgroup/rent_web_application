@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.timezone import now
 User = settings.AUTH_USER_MODEL
 
 
@@ -22,6 +23,7 @@ class Property(models.Model):
     construction_year = models.SmallIntegerField()
     bedrooms = models.SmallIntegerField()
     description = models.TextField(max_length=350, null=True)
+    created_date = models.DateTimeField(default=now)
 
     # Additional Fields
     zip = models.CharField(max_length=10, null=True)

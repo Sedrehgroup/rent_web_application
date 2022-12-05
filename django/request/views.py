@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from .models import Request
-from permissions import IsNotOwner
+from request.permissions import IsNotOwner
 from .serializer import RequestSerializer, CreateRequestSerializer, LandlordUpdateRequestSerializer
 from rest_framework.permissions import IsAuthenticated
 
