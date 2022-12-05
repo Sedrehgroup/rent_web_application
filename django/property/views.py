@@ -9,6 +9,7 @@ class PropertyList(ListAPIView):
     serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PropertyPagination
+    filterset_fields = ['county', 'city']
     queryset = Property.objects.all().order_by("-created_date")
 
 
