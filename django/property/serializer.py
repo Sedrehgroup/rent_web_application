@@ -13,3 +13,10 @@ class PropertySerializer(serializers.ModelSerializer):
     def get_owner(self, obj):
         owner = User.objects.filter(id=obj.owner_id).only("first_name", "last_name").first()
         return {"owner_id": owner.id, "first_name": owner.first_name, "last_name": owner.last_name}
+
+
+class PropertyListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
+        fields = ("id" ,"title", "mortgage_amount", "rent_amount",
+         "county", "city", "province", "area")

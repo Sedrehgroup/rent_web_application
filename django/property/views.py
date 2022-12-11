@@ -1,12 +1,12 @@
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from .models import Property
-from .serializer import PropertySerializer
+from .serializer import PropertySerializer, PropertyListSerializer
 from rest_framework.permissions import IsAuthenticated
 from property.pagination import PropertyPagination
 
 
 class PropertyList(ListAPIView):
-    serializer_class = PropertySerializer
+    serializer_class = PropertyListSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PropertyPagination
     filterset_fields = ['county', 'city']
@@ -35,3 +35,11 @@ class RetrieveUpdateDestroyProperties(RetrieveUpdateDestroyAPIView):
         queryset = Property.objects.filter(owner=self.request.user)
         return queryset
 
+
+class RetrieveProperties(RetrieveAPIView):
+    serializer_class = PropertySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = Property.objects.all().order_by("-created_date")
+        return qs

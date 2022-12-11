@@ -1,5 +1,5 @@
 from .models import User, OtpCode, UserAdditionalInformation
-from rest_framework import serializers
+from rest_framework import serializers, status
 from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
