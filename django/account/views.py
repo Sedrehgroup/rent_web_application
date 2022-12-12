@@ -71,13 +71,16 @@ class VerifyOtpRegister(DestroyAPIView):
 
             else:
                 instance_code.delete()
-                user = User.objects.get(phone_number=phone_number)
-                token = RefreshToken.for_user(user)
-                data = {'refresh': str(token), "access": str(token.access_token)}
-                return Response(data, status=status.HTTP_200_OK)
+                try:
+                    user = User.objects.get(phone_number=phone_number)
+                    token = RefreshToken.for_user(user)
+                    data = {'refresh': str(token), "access": str(token.access_token)}
+                    return Response(data, status=status.HTTP_200_OK)
+                except:
+                    return Response(data={"User is not created"}, status=status.HTTP_404_NOT_FOUND)
 
         except:
-            return Response(data={"token not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(data={"otp code is wrong"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RetrieveUser(RetrieveAPIView):
