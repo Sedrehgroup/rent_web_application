@@ -51,4 +51,4 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class RetrieveUpdateDestroyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ("is_active")
+        exclude = ("is_active",)
