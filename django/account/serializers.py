@@ -51,11 +51,4 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class RetrieveUpdateDestroyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = (
-            "phone_number", "national_code", "first_name", "last_name",
-            "email", "father_name", "certificate_number", "birth_day",
-            "sex", "latin_first_name", "latin_last_name", "certificate_country",
-            "certificate_province", "certificate_county", "certificate_type",
-            "marriage", "education", "province", "county", "city",
-            "address", "postal_code", "personal_phone_number",
-        )
+        exclude = ("is_active")
