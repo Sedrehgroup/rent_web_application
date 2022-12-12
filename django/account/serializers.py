@@ -1,4 +1,4 @@
-from .models import User, OtpCode, UserAdditionalInformation
+from .models import User, OtpCode
 from rest_framework import serializers, status
 from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
@@ -51,20 +51,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class RetrieveUpdateDestroyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "phone_number", "national_code", "first_name", "last_name")
-
-
-
-
-
-
-
-class RetrieveUpdateDestroyAdditionalUserInformationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserAdditionalInformation
-        fields = "__all__"
-
-class CreateAdditionalUserInformationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserAdditionalInformation
-        exclude = ('user', )
+        fields = (
+            "phone_number", "national_code", "first_name", "last_name",
+            "email", "father_name", "certificate_number", "birth_day",
+            "sex", "latin_first_name", "latin_last_name", "certificate_country",
+            "certificate_province", "certificate_county", "certificate_type",
+            "marriage", "education", "province", "county", "city",
+            "address", "postal_code", "personal_phone_number",
+        )

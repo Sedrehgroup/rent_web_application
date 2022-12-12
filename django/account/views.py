@@ -1,6 +1,7 @@
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,9 +9,9 @@ from rest_framework import status
 import random
 from datetime import datetime, timezone
 from utils import send_otp_code, phone_number_validator
-from .models import OtpCode, User, UserAdditionalInformation
+from .models import OtpCode, User
 from .serializers import CustomTokenObtainPairSerializer, UserSerializer, CreateUserSerializer, \
-    RetrieveUpdateDestroyAdditionalUserInformationSerializer, CreateAdditionalUserInformationSerializer, RetrieveUpdateDestroyUserSerializer
+    RetrieveUpdateDestroyUserSerializer
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -20,14 +21,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class CreateUser(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = CreateUserSerializer
-
-
-class CreateAdditionalUserInformation(CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CreateAdditionalUserInformationSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 
 class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
@@ -78,7 +71,10 @@ class VerifyOtpRegister(DestroyAPIView):
 
             else:
                 instance_code.delete()
-                return Response(status=status.HTTP_200_OK)
+                user = User.objects.get(phone_number=phone_number)
+                token = RefreshToken.for_user(user)
+                data = {'refresh': str(token), "access": str(token.access_token)}
+                return Response(data, status=status.HTTP_200_OK)
 
         except:
             return Response(data={"token not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -92,19 +88,3 @@ class RetrieveUser(RetrieveAPIView):
         if self.kwargs["pk"] == self.request.user.id or self.request.user.is_admin:
             return self.request.user
         raise PermissionDenied("You don't have access to see the details of other account")
-
-
-class RetrieveUpdateDestroyAdditionalUserInformation(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = RetrieveUpdateDestroyAdditionalUserInformationSerializer
-    queryset = UserAdditionalInformation.objects.all()
-
-    def get_object(self):
-        qs = self.get_queryset()
-        obj = qs.get(user=self.request.user)
-        return obj
-
-    def perform_update(self, serializer):
-        serializer.save(user=self.request.user)
-
-

@@ -9,18 +9,6 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
-    username = None
-    email = None
-    
-    USERNAME_FIELD = 'phone_number'
-
-    def __str__(self):
-        return self.phone_number
-
-
-class UserAdditionalInformation(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField(max_length=255, unique=True, null=True)
     father_name = models.CharField(max_length=128, null=True)
     certificate_number = models.CharField(max_length=10, null=True)
     birth_day = models.DateField(null=True)
@@ -39,6 +27,13 @@ class UserAdditionalInformation(models.Model):
     address = models.TextField(max_length=200, null=True)
     postal_code = models.CharField(max_length=10, null=True)
     personal_phone_number = models.CharField(max_length=11, null=True, unique=True)
+    username = None
+    email = None
+    
+    USERNAME_FIELD = 'phone_number'
+
+    def __str__(self):
+        return self.phone_number
 
 
 class OtpCode(models.Model):

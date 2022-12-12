@@ -51,13 +51,3 @@ def property_create():
         bedrooms=1,
     )
     return property.id
-
-
-# @pytest.fixture
-# def chat_create():
-#     chat = Chat.objects.create(
-#         tenant=user_create_2(),
-#         publisher=user_create_3(),
-#         property=property_create(),
-#     )
-#     return chat
