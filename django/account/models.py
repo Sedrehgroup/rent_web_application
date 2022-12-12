@@ -9,6 +9,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
+    email = models.EmailField(max_length=255, unique=True, null=True)
     father_name = models.CharField(max_length=128, null=True)
     certificate_number = models.CharField(max_length=10, null=True)
     birth_day = models.DateField(null=True)
@@ -28,7 +29,6 @@ class User(AbstractUser):
     postal_code = models.CharField(max_length=10, null=True)
     personal_phone_number = models.CharField(max_length=11, null=True, unique=True)
     username = None
-    email = None
     
     USERNAME_FIELD = 'phone_number'
 
