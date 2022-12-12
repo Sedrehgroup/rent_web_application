@@ -51,7 +51,7 @@ class OtpRegister(APIView):
         updated_values = {'code': f'{random_code}'}
         OtpCode.objects.update_or_create(phone_number=phone_number, defaults=updated_values)
 
-        return Response(data=random_code, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
 
 
 class VerifyOtpRegister(DestroyAPIView):
