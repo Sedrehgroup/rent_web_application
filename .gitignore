@@ -2,7 +2,4 @@
 *.pyc
 venv
 **/migrations/0*
-
-
-
-
+media

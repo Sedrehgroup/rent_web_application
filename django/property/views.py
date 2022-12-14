@@ -3,6 +3,7 @@ from .models import Property
 from .serializer import PropertySerializer, PropertyListSerializer
 from rest_framework.permissions import IsAuthenticated
 from property.pagination import PropertyPagination
+from rest_framework.parsers import JSONParser, MultiPartParser
 
 
 class PropertyList(ListAPIView):
@@ -18,6 +19,7 @@ class CreateListMyProperties(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     filterset_fields = ['county', 'city']
     pagination_class = PropertyPagination
+    parser_classes = [MultiPartParser]
 
     def get_queryset(self):
         queryset = Property.objects.filter(owner=self.request.user).order_by("-created_date")
