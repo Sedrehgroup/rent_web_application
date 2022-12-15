@@ -7,13 +7,6 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 
 
-class UploadImages(serializers.Serializer):
-    upload_image = serializers.ListField(
-        child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
-        write_only=True,
-    )
-
-
 class PropertySerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField()
     images = serializers.ListField(
