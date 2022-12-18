@@ -36,18 +36,21 @@ class PropertySerializer(serializers.ModelSerializer):
 
     def save_images(self, list_images, id):
         for image in list_images:
-            if validate_format_image(image) and validate_size_image(image):
-                path = default_storage.save(f"property/{id}/{image.name}", ContentFile(image.read()))
-                os.path.join(settings.MEDIA_ROOT, path)
+            path = default_storage.save(f"property/{id}/{image.name}", ContentFile(image.read()))
+            os.path.join(settings.MEDIA_ROOT, path)
 
     def create(self, validated_data):
-        if validated_data.get("upload_images"):
+        list_images = validated_data.get("upload_images")
+
+        if not list_images:
+            new_property = Property.objects.create(**validated_data)
+            return new_property
+
+        if is_valid_image(list_images):
             list_images = validated_data.pop("upload_images")
             new_property = Property.objects.create(**validated_data)
             self.save_images(list_images, new_property.id)
             return new_property
-        new_property = Property.objects.create(**validated_data)
-        return new_property
 
 
 class PropertyListSerializer(serializers.ModelSerializer):
