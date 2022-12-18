@@ -6,6 +6,14 @@ import os
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.conf import settings
+from uuid import uuid4
+
+
+class PropertyListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
+        fields = ("id" ,"title", "mortgage_amount", "rent_amount",
+         "county", "city", "province", "area")
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -16,6 +24,7 @@ class PropertySerializer(serializers.ModelSerializer):
         required=False
     )
     images = serializers.SerializerMethodField(read_only=True)
+    image = serializers.CharField(write_only=True, required=False) # for delete image
 
     class Meta:
         model = Property
@@ -27,24 +36,28 @@ class PropertySerializer(serializers.ModelSerializer):
 
     def get_images(self, obj):
         images = []
-        if vlalidate_path_image(obj.id):
-            path = os.path.join(settings.MEDIA_ROOT, f"property/{obj.id}")
-            image_files = os.listdir(path)    
+        path = os.path.join(settings.MEDIA_ROOT, f"property/{obj.id}")
+        if os.path.isdir(path): 
+            image_files = os.listdir(path) 
             for image in image_files:
-                images.append(image)
+                images.append(f"/media/property/{obj.id}/{image}")
         return images
 
     def save_images(self, list_images, id):
         for image in list_images:
-            path = default_storage.save(f"property/{id}/{image.name}", ContentFile(image.read()))
-            os.path.join(settings.MEDIA_ROOT, path)
+            ext = os.path.splitext(image.name)[1]
+            default_storage.save(f"property/{id}/{str(uuid4())}{ext}", ContentFile(image.read()))
+
+    def delete_images(self, name, property_id):
+        path = os.path.join(settings.MEDIA_ROOT, f"property/{property_id}/{name}")
+        if os.path.isfile(path):
+            os.remove(path)
 
     def create(self, validated_data):
         list_images = validated_data.get("upload_images")
 
         if not list_images:
-            new_property = Property.objects.create(**validated_data)
-            return new_property
+            return super().create(validated_data)
 
         if is_valid_image(list_images):
             list_images = validated_data.pop("upload_images")
@@ -52,9 +65,17 @@ class PropertySerializer(serializers.ModelSerializer):
             self.save_images(list_images, new_property.id)
             return new_property
 
+    def update(self, instance, validated_data):
+        list_images = validated_data.get("upload_images")
+        image = validated_data.get("image")
+        update_proeprty = super().update(instance, validated_data)
 
-class PropertyListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Property
-        fields = ("id" ,"title", "mortgage_amount", "rent_amount",
-         "county", "city", "province", "area")
+        if image:
+            self.delete_images(image, update_proeprty.id)
+
+        if list_images:
+            if is_valid_image(list_images):
+                list_images = validated_data.pop("upload_images")
+                self.save_images(list_images, update_proeprty.id)
+                return update_proeprty
+        return update_proeprty

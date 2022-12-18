@@ -32,6 +32,7 @@ class CreateListMyProperties(ListCreateAPIView):
 class RetrieveUpdateDestroyProperties(RetrieveUpdateDestroyAPIView):
     serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
 
     def get_queryset(self):
         queryset = Property.objects.filter(owner=self.request.user)
