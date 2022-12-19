@@ -61,7 +61,7 @@ class PropertySerializer(serializers.ModelSerializer):
 
         if is_valid_image(list_images):
             list_images = validated_data.pop("upload_images")
-            new_property = Property.objects.create(**validated_data)
+            new_property = super().create(validated_data)
             self.save_images(list_images, new_property.id)
             return new_property
 

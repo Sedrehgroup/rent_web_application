@@ -43,3 +43,5 @@ class Property(models.Model):
     unit_floor = models.SmallIntegerField(null=True)
     floors_number = models.SmallIntegerField(null=True)
     units_per_floor = models.SmallIntegerField(null=True)
+    lat = models.FloatField(null=True)
+    lng = models.FloatField(null=True)
