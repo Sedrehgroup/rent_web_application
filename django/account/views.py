@@ -97,7 +97,7 @@ class IsUserCompletion(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserCompletionSerializer
     
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         user = User.objects.get(pk=self.kwargs["pk"])
         serializer =  self.serializer_class(user)
         not_complete_value = []
