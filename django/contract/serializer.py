@@ -68,7 +68,9 @@ class LeaseSerializer(serializers.ModelSerializer):
         model = Contract
         fields = (
             "dong", "start_date", "end_date", "contract_landlord", "contract_tenant",
-            "contract_property", "document_status",
+            "contract_property", "official_document_status", "contract_date",
+            "tenant_late_fee", "lessor_late_fee", "document_status", "tenant_signature",
+            "landlord_signature"
         )
     def get_contract_landlord(self, obj):
         contract_landlord = User.objects.get(id=obj.contract_landlord_id)

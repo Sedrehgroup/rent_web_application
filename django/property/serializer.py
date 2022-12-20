@@ -88,5 +88,7 @@ class LeasePropertySerializer(serializers.ModelSerializer):
             "type", "province", "county", "city", "address", "unit_floor",
             "zip", "use", "area", "Skeleton_type", "construction_year",
             "floors_number", "units_per_floor", "building_side", "description",
-            "Sub_registration_plate", "Original_registration_plate", "phone_lines"
+            "Sub_registration_plate", "Original_registration_plate", "phone_lines",
+            "water", "electricity", "gas", "wastewater", "parking", "parking_number",
+            "home_phone", "building_facades"
         )

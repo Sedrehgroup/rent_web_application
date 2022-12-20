@@ -19,3 +19,6 @@ class Contract(models.Model):
     dong = models.SmallIntegerField()
     tenant_signature = models.BooleanField(default=False)
     landlord_signature = models.BooleanField(default=False)
+    tenant_late_fee = models.IntegerField(null=True)
+    lessor_late_fee = models.IntegerField(null=True)
+    official_document_status = models.SmallIntegerField(null=True)
