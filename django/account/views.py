@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from utils import send_otp_code, phone_number_validator
 from .models import OtpCode, User
 from .serializers import CustomTokenObtainPairSerializer, UserSerializer, CreateUserSerializer, \
-    RetrieveUpdateDestroyUserSerializer
+    RetrieveUpdateDestroyUserSerializer, UserCompletionSerializer
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -91,3 +91,19 @@ class RetrieveUser(RetrieveAPIView):
         if self.kwargs["pk"] == self.request.user.id or self.request.user.is_admin:
             return self.request.user
         raise PermissionDenied("You don't have access to see the details of other account")
+
+
+class IsUserCompletion(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserCompletionSerializer
+    
+    def get(self, request):
+        user = User.objects.get(pk=request.user.id)
+        serializer =  self.serializer_class(user)
+        not_complete_value = []
+        for key, value in serializer.data.items():
+            if not value:
+                not_complete_value.append(key)
+        if not_complete_value:
+            return Response(not_complete_value, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(status=status.HTTP_200_OK)

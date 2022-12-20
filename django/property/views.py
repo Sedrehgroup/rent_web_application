@@ -11,7 +11,7 @@ class PropertyList(ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = PropertyPagination
     filterset_fields = ['county', 'city']
-    queryset = Property.objects.all().order_by("-created_date")
+    queryset = Property.objects.filter(is_public=True).order_by("-created_date")
 
 
 class CreateListMyProperties(ListCreateAPIView):
@@ -44,5 +44,5 @@ class RetrieveProperties(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        qs = Property.objects.all().order_by("-created_date")
+        qs = Property.objects.filter(is_public=True).order_by("-created_date")
         return qs

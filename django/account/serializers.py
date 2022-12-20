@@ -52,3 +52,12 @@ class RetrieveUpdateDestroyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ("is_active",)
+
+
+class UserCompletionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "first_name","last_name", "national_code", "father_name",
+            "certificate_number", "province", "county", "address",
+            )

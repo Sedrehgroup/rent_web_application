@@ -12,7 +12,7 @@ class Contract(models.Model):
     contract_date = models.DateField()
     serial_type = models.SmallIntegerField(null=True)
     serial_number = models.IntegerField(null=True)
-    document_status = models.SmallIntegerField(null=True)
+    document_status = models.SmallIntegerField(default=0)
     start_date = models.DateField()
     end_date = models.DateField()
     share = models.SmallIntegerField()

@@ -79,3 +79,14 @@ class PropertySerializer(serializers.ModelSerializer):
                 self.save_images(list_images, update_proeprty.id)
                 return update_proeprty
         return update_proeprty
+
+
+class LeasePropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
+        fields = (
+            "type", "province", "county", "city", "address", "unit_floor",
+            "zip", "use", "area", "Skeleton_type", "construction_year",
+            "floors_number", "units_per_floor", "building_side", "description",
+            "Sub_registration_plate", "Original_registration_plate", "phone_lines"
+        )

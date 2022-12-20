@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from .views import OtpRegister, VerifyOtpRegister, CustomTokenObtainPairView, CreateUser,\
-    RetrieveUpdateDestroyUser
+    RetrieveUpdateDestroyUser, IsUserCompletion
 
 urlpatterns = [
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -13,4 +13,6 @@ urlpatterns = [
 
     path('otp_register/', OtpRegister.as_view(), name='otp_register'),
     path('verify_otp_register/', VerifyOtpRegister.as_view(), name='verify_otp_register'),
+    
+    path("user-complete/", IsUserCompletion.as_view(), name="user-complete"),
 ]

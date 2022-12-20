@@ -24,6 +24,7 @@ class Property(models.Model):
     bedrooms = models.SmallIntegerField()
     description = models.TextField(max_length=350, null=True)
     created_date = models.DateTimeField(default=now)
+    is_public = models.BooleanField(default=True)
     # Additional Fields
     zip = models.CharField(max_length=10, null=True)
     Sub_registration_plate = models.IntegerField(null=True)
