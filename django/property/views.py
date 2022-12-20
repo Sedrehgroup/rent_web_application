@@ -55,5 +55,5 @@ class RetrieveProperties(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        qs = Property.objects.filter(is_public=True).order_by("-created_date")
+        qs = Property.objects.filter(is_public=False).order_by("-created_date")
         return qs
