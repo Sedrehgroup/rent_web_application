@@ -3,11 +3,11 @@ from .models import Property
 from .serializer import PropertySerializer, PropertyListSerializer
 from rest_framework.permissions import IsAuthenticated
 from property.pagination import PropertyPagination
-from rest_framework.parsers import JSONParser, MultiPartParser
+from rest_framework.parsers import MultiPartParser
 
 
 class PropertyList(ListAPIView):
-    serializer_class = PropertyListSerializer
+    serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PropertyPagination
     filterset_fields = ['county', 'city']
