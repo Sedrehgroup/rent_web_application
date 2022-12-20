@@ -22,11 +22,6 @@ class ListCreateChatSerializer(serializers.ModelSerializer):
         last_note = Note.objects.filter(chat=obj).order_by("-created_date").only("text").first()
         return last_note.text if last_note is not None else ""
 
-    def validate(self, attr):
-        if attr["tenant"].id == attr["property"].owner_id:
-            raise ValidationError({"tenant": "tenant ID is equal to publisher ID of property"})
-        return attr
-
     class Meta:
         model = Chat
         fields = ["id", "tenant", "property", "publisher",
