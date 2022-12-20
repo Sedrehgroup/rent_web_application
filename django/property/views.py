@@ -1,4 +1,5 @@
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, \
+    CreateAPIView
 from .models import Property
 from .serializer import PropertySerializer, PropertyListSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -13,8 +14,18 @@ class PropertyList(ListAPIView):
     filterset_fields = ['county', 'city']
     queryset = Property.objects.filter(is_public=True).order_by("-created_date")
 
+class ListMyProperties(ListAPIView):
+    serializer_class = PropertyListSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PropertyPagination
+    filterset_fields = ['county', 'city']
 
-class CreateListMyProperties(ListCreateAPIView):
+    def get_queryset(self):
+        queryset = Property.objects.filter(owner=self.request.user).order_by("-created_date")
+        return queryset
+
+
+class CreateMyProperties(CreateAPIView):
     serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
     filterset_fields = ['county', 'city']
