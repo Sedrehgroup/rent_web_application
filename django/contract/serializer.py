@@ -61,25 +61,30 @@ class ContractSerializer(serializers.ModelSerializer):
 
 
 class LeaseSerializer(serializers.ModelSerializer):
-    contract_landlord = serializers.SerializerMethodField()
-    contract_tenant = serializers.SerializerMethodField()
-    contract_property = serializers.SerializerMethodField()
+    contract_landlord_information = serializers.SerializerMethodField()
+    contract_tenant_information  = serializers.SerializerMethodField()
+    contract_property_information = serializers.SerializerMethodField()
+
     class Meta:
         model = Contract
-        fields = (
-            "dong", "start_date", "end_date", "contract_landlord", "contract_tenant",
-            "contract_property", "official_document_status", "contract_date",
-            "tenant_late_fee", "lessor_late_fee", "document_status", "tenant_signature",
-            "landlord_signature"
-        )
-    def get_contract_landlord(self, obj):
+        exclude = (
+            "contract_registration_date", "serial_type", "serial_number", 
+            "tenant_signature", "landlord_signature"
+            )
+        extra_kwargs = {
+            'contract_tenant': {'write_only': True},
+            'contract_landlord': {'write_only': True},
+            "contract_property": {'write_only': True},
+        }
+
+    def get_contract_landlord_information(self, obj):
         contract_landlord = User.objects.get(id=obj.contract_landlord_id)
         return UserCompletionSerializer(instance=contract_landlord).data
 
-    def get_contract_tenant(self, obj):
+    def get_contract_tenant_information(self, obj):
         contract_tenant = User.objects.get(id=obj.contract_tenant_id)
         return UserCompletionSerializer(instance=contract_tenant).data
 
-    def get_contract_property(self, obj):
+    def get_contract_property_information(self, obj):
         contract_property = Property.objects.get(id=obj.contract_property_id)
         return LeasePropertySerializer(instance=contract_property).data
