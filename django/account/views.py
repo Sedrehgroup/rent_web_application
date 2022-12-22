@@ -91,19 +91,3 @@ class RetrieveUser(RetrieveAPIView):
         if self.kwargs["pk"] == self.request.user.id or self.request.user.is_admin:
             return self.request.user
         raise PermissionDenied("You don't have access to see the details of other account")
-
-
-class IsUserCompletion(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = UserCompletionSerializer
-    
-    def get(self, request, *args, **kwargs):
-        user = User.objects.get(pk=self.kwargs["pk"])
-        serializer =  self.serializer_class(user)
-        not_complete_value = []
-        for key, value in serializer.data.items():
-            if not value:
-                not_complete_value.append(key)
-        if not_complete_value:
-            return Response(not_complete_value, status=status.HTTP_406_NOT_ACCEPTABLE)
-        return Response(status=status.HTTP_200_OK)

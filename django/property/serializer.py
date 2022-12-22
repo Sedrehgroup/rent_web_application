@@ -28,7 +28,7 @@ class PropertySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Property
-        fields = "__all__"
+        exclude = ("is_public",)
 
     def get_owner(self, obj):
         owner = User.objects.filter(id=obj.owner_id).only("first_name", "last_name").first()
