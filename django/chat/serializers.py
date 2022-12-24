@@ -11,10 +11,8 @@ class ListCreateChatSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         """Convert `username` to lowercase."""
         ret = super().to_representation(instance)
-        publisher= User.objects.get(id=ret["publisher"])
-        tenant = User.objects.get(id=ret["tenant"])
-        ret["publisher"] = {"id": publisher.id, "full_name": publisher.get_full_name()}
-        ret["tenant"] = {"id": tenant.id, "full_name": tenant.get_full_name()}
+        ret["publisher"] = {"id": instance.publisher.id, "full_name": instance.publisher.get_full_name()}
+        ret["tenant"] = {"id": instance.tenant.id, "full_name": instance.tenant.get_full_name()}
         return ret
 
     def validate(self, attr):
@@ -32,6 +30,17 @@ class ListCreateChatSerializer(serializers.ModelSerializer):
     def get_last_text(self, obj: Chat):
         last_note = Note.objects.filter(chat=obj).order_by("-created_date").only("text").first()
         return last_note.text if last_note is not None else ""
+
+    def create(self, validated_data):
+        tenant_id = validated_data["tenant"].id
+        owner_id = validated_data["property"].owner_id
+        chat = Chat.objects\
+            .filter(tenant_id=tenant_id, publisher_id=owner_id)\
+            .select_related("publisher", "tenant")\
+            .first()
+        if chat:
+            return chat
+        return super().create(validated_data)
 
     class Meta:
         model = Chat
