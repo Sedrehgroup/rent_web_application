@@ -11,6 +11,7 @@ class Chat(models.Model):
     tenant = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tenant")
     publisher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="publisher", blank=True)
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(default=now)
 
     def save(self, *args, **kwargs):
         if not self.pk:
