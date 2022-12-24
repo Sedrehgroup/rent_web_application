@@ -28,35 +28,55 @@ class ContractSerializer(serializers.ModelSerializer):
         return RetrieveUpdateDestroyUserSerializer(instance=contract_tenant).data
 
     def validate(self, data):
-        if self.context['request']._request.method == 'POST':
+        if self.context['request'].method == 'POST':
             if data['contract_landlord'] == data['contract_tenant']:
                 raise ValidationError('owner and tenant are equal', status.HTTP_400_BAD_REQUEST)
             return data
+
         return data
     
-    def update(self, instance, validated_data):
-        tenant_signature = validated_data.get("tenant_signature")
-        landlord_signature = validated_data.get("landlord_signature")
+    def get_status_and_signatures(self, instance, validated_data):
+        tenant_signature = validated_data.pop("tenant_signature", None)
+        landlord_signature = validated_data.pop("landlord_signature", None)
+        user = self.context['request'].user
 
-        if tenant_signature or landlord_signature:
-            if tenant_signature:
-                instance.tenant_signature = True
-                instance.document_status = 2
-            if landlord_signature:
-                instance.landlord_signature = True
-                instance.document_status = 1
-            
-            if instance.tenant_signature and instance.landlord_signature:
-                instance.document_status = 3
-        
-        if instance.tenant_signature and tenant_signature==False:
-            instance.document_status = 6
-        elif instance.landlord_signature and landlord_signature==False:
-            instance.document_status = 6
+        last_tenant_signature = instance.tenant_signature
+        last_landlord_signature = instance.landlord_signature
+        document_status = instance.document_status
 
         if validated_data != {} and tenant_signature==None and landlord_signature==None:
-            instance.document_status = 4
+            document_status = 4
 
+        else:
+            if landlord_signature != None and user.id == instance.contract_landlord_id:
+                if landlord_signature and not instance.landlord_signature:
+                    last_landlord_signature = True
+                    document_status = 1
+
+                elif instance.landlord_signature and landlord_signature==False:
+                    last_landlord_signature = False
+                    document_status = 6
+
+            elif tenant_signature != None and user.id == instance.contract_tenant_id:
+                if tenant_signature and not instance.tenant_signature:
+                    last_tenant_signature = True
+                    document_status = 2
+    
+                elif instance.tenant_signature and tenant_signature==False:
+                    last_tenant_signature = False
+                    document_status = 6
+
+            if last_tenant_signature and last_landlord_signature:
+                document_status = 3
+
+        return (document_status, last_landlord_signature, last_tenant_signature)
+
+    def update(self, instance, validated_data):
+        status_and_signatures = self.get_status_and_signatures(instance, validated_data)
+
+        instance.document_status = status_and_signatures[0]
+        instance.landlord_signature = status_and_signatures[1]
+        instance.tenant_signature = status_and_signatures[2]
         return super().update(instance, validated_data)
 
 
