@@ -18,8 +18,12 @@ class ListCreateChatSerializer(serializers.ModelSerializer):
         return ret
 
     def validate(self, attr):
-        if attr["tenant"].id == attr["property"].owner_id:
-            raise ValidationError({"tenant":"tenant ID is equal to publisher ID of property"})
+        tenant_id = attr["tenant"].id
+        owner_id = attr["property"].owner_id
+        if tenant_id == owner_id:
+            raise serializers.ValidationError({"tenant": "tenant ID is equal to publisher ID of property"})
+        if self.context["request"].user.id not in (tenant_id, owner_id):
+            raise serializers.ValidationError({"user": "You are not none of tenant or publisher. You are a bad man."})
         return attr
 
     def get_property_title(self, obj: Chat):
