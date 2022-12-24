@@ -1,12 +1,16 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 from chat.models import Note, Chat
-from account.models import User
+
+
+class CustomListChatSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        list_data = super().to_representation(data)
+        return sorted(list_data, key=lambda d: d['last_note']['date'] if d['last_note'] else '', reverse=True)
 
 
 class ListCreateChatSerializer(serializers.ModelSerializer):
     property_title = serializers.SerializerMethodField(read_only=True)
-    last_text = serializers.SerializerMethodField(read_only=True)
+    last_note = serializers.SerializerMethodField(read_only=True)
 
     def to_representation(self, instance):
         """Convert `username` to lowercase."""
@@ -27,16 +31,18 @@ class ListCreateChatSerializer(serializers.ModelSerializer):
     def get_property_title(self, obj: Chat):
         return obj.property.title
 
-    def get_last_text(self, obj: Chat):
-        last_note = Note.objects.filter(chat=obj).order_by("-created_date").only("text").first()
-        return last_note.text if last_note is not None else ""
+    def get_last_note(self, obj: Chat):
+        last_note = Note.objects.filter(chat=obj).order_by("-created_date").only("text", "created_date").first()
+        if last_note:
+            return {"text": last_note.text, "date": last_note.created_date}
+        return {"text": '', "date": obj.created_date}
 
     def create(self, validated_data):
         tenant_id = validated_data["tenant"].id
         owner_id = validated_data["property"].owner_id
-        chat = Chat.objects\
-            .filter(tenant_id=tenant_id, publisher_id=owner_id)\
-            .select_related("publisher", "tenant")\
+        chat = Chat.objects \
+            .filter(tenant_id=tenant_id, publisher_id=owner_id) \
+            .select_related("publisher", "tenant") \
             .first()
         if chat:
             return chat
@@ -44,8 +50,9 @@ class ListCreateChatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chat
+        list_serializer_class = CustomListChatSerializer
         fields = ["id", "tenant", "property", "publisher",
-                  "property_title", "publisher", "last_text"]
+                  "property_title", "publisher", "last_note"]
 
 
 class ListCreateNotesByChatSerializer(serializers.ModelSerializer):
